@@ -6,4 +6,4 @@ mydb = mysql.connector.connect(
 )
 mycursor = mydb.cursor()
 mycursor.execute("CREATE DATABASE Animali")
-mycursor.execute("CREATE TABLE Mammiferi (Id INT,Nome_Proprio VARCHAR(255),Razza VARCHAR(255),Peso INT,eta INT)")
+mycursor.execute("CREATE TABLE Mammiferi (Id INT PRIMARY KEY,Nome_Proprio VARCHAR(255),Razza VARCHAR(255),Peso INT,eta INT)")
