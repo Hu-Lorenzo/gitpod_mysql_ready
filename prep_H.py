@@ -1,20 +1,33 @@
-from flask import Flask
-from flask import send_file
+from flask import Flask, jsonify
+import mysql.connector
+from mysql.connector import Error
 
 app = Flask(__name__)
 
-@app.route("/")
+db_config = {
+    'host': 'localhost',     
+    'user': 'root',      
+    'password': '', 
+    'database': 'Animali'
+}
 
-def index():
-    return "Hello world!"
+@app.route('/dati', methods=['GET'])
+def get_data():
+    try:
+        conn = mysql.connector.connect(**db_config)
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute("SELECT * FROM Mammiferi")
+        result = cursor.fetchall()
+        return jsonify(result)
+    
+    except Error as e:
+        print("Errore nella connessione al database:", e)
+        return jsonify({"errore": "Impossibile connettersi al database"}), 500
+    
+    finally:
+        if conn.is_connected():
+            cursor.close()
+            conn.close()
 
-@app.route("/books")
-def books():
-    return send_file('books.json')
-
-@app.route("/Tokusatsu")
-def books():
-    return send_file('Tokusatsu.json')
-if __name__ == "__main__":
- 
-    app.run()
+if __name__ == '__main__':
+    app.run(debug=True)
